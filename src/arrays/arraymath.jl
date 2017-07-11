@@ -95,13 +95,14 @@ Base.scale!(num::Number, qarr::AbstractQuArray) = (scale!(num, rawcoeffs(qarr));
 Base.scale!(num::Number, ct::CTranspose) = CTranspose(scale!(num', ct.qarr))
 Base.scale!(qarr::AbstractQuArray, num::Number) = scale!(num, qarr)
 
-function Base.scale(num::Number, qarr::AbstractQuArray)
-    fc = scale(num, rawcoeffs(qarr))
+function scale(num::Number, qarr::AbstractQuArray)
+    fc = rawcoeffs(qarr)
+    scale!(num, qarr)
     QAT = similar_type(qarr)
     return QAT(fc, bases(qarr))
 end
-Base.scale(num::Number, ct::CTranspose) = CTranspose(scale(num', ct.qarr))
-Base.scale(qarr::AbstractQuArray, num::Number) = scale(num, qarr)
+scale(num::Number, ct::CTranspose) = CTranspose(scale(num', ct.qarr))
+scale(qarr::AbstractQuArray, num::Number) = scale(num, qarr)
 
 *(num::Number, qarr::AbstractQuArray) = scale(num, qarr)
 *(qarr::AbstractQuArray, num::Number) = scale(qarr, num)
